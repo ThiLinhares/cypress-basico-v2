@@ -2,6 +2,8 @@
 
 describe('Central de Atendimento ao Cliente TAT', function () {
 
+    const THREE_SECONDS_IN_MS = 3000
+
     beforeEach(() => {
         cy.visit('./src/index.html')
     })
@@ -12,15 +14,26 @@ describe('Central de Atendimento ao Cliente TAT', function () {
     })
 
     it('preenche os campos obrigatórios e envia o formulário', function () {
+
+        cy.clock() //para o relogio do navegador
+
         cy.get('#firstName').type('Thiago')
         cy.get('#lastName').type('Linhares')
         cy.get('#email').type('email@teste.com')
         cy.get('#open-text-area').type('Olá, tudo bem?')
         cy.contains('button', 'Enviar').click()
         cy.get('.success').should('be.visible')
+
+        cy.tick(THREE_SECONDS_IN_MS) //avança o relogio do navegador
+
+        cy.get('.success').should('not.be.visible')
+
     })
 
     it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', function () {
+
+        cy.clock() //para o relogio do navegador
+
         cy.get('#firstName').type('Thiago')
         cy.get('#lastName').type('Linhares')
         cy.get('#email').type('email.teste.com')
@@ -28,6 +41,10 @@ describe('Central de Atendimento ao Cliente TAT', function () {
         cy.get('#open-text-area').type('Olá, tudo bem?', { delay: 0 })
         cy.contains('button', 'Enviar').click()
         cy.get('.error > strong').should('be.visible')
+
+        cy.tick(THREE_SECONDS_IN_MS) //avança o relogio do navegador
+
+        cy.get('.error > strong').should('not.be.visible')
     })
 
     it('telefone só aceita números', function () {
@@ -37,7 +54,8 @@ describe('Central de Atendimento ao Cliente TAT', function () {
 
     })
 
-    it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function () {
+    it.only('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function () {
+        cy.clock()
 
         cy.get('#firstName').type('Thiago')
         cy.get('#lastName').type('Linhares')
@@ -46,6 +64,11 @@ describe('Central de Atendimento ao Cliente TAT', function () {
         cy.get('#open-text-area').type('Olá, tudo bem?')
         cy.contains('button', 'Enviar').click()
         cy.get('.error').should('be.visible')
+
+        cy.tick(THREE_SECONDS_IN_MS)
+
+        cy.get('.error').should('not.be.visible')
+
     })
 
     it('preenche e limpa os campos nome, sobrenome, email e telefone', function () {
