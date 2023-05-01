@@ -17,13 +17,13 @@ describe('Central de Atendimento ao Cliente TAT', function () {
 
         cy.clock() //para o relogio do navegador
 
-        cy.get('#firstName').type('Thiago')
-        cy.get('#lastName').type('Linhares')
+        cy.get('#firstName').type('Thiago', {log: false})
+        cy.get('#lastName').type('Linhares', {log: false})
         cy.get('#email').type('email@teste.com')
-        cy.get('#open-text-area').type('Olá, tudo bem?')
+        cy.get('#open-text-area').type('Olá, tudo bem?', {delay: 0})
         cy.contains('button', 'Enviar').click()
         cy.get('.success').should('be.visible')
-
+        
         cy.tick(THREE_SECONDS_IN_MS) //avança o relogio do navegador
 
         cy.get('.success').should('not.be.visible')
@@ -54,7 +54,7 @@ describe('Central de Atendimento ao Cliente TAT', function () {
 
     })
 
-    it.only('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function () {
+    it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function () {
         cy.clock()
 
         cy.get('#firstName').type('Thiago')
@@ -97,7 +97,7 @@ describe('Central de Atendimento ao Cliente TAT', function () {
         cy.fillMandatoryFieldsAndSubmit()
     })
 
-    it('seleciona um produto (YouTube) por seu texto', function () {
+    it.only('seleciona um produto (YouTube) por seu texto', function () {
         cy.get('#product')
             .select('YouTube')
             .should('have.value', 'youtube')
@@ -125,7 +125,7 @@ describe('Central de Atendimento ao Cliente TAT', function () {
     it('marca cada tipo de atendimento', function () {
         cy.get('input[type="radio"]')
             .should('have.length', 3)
-            .each(function ($radio) { //each é pra cada opção
+            .each(function ($radio) { //each é pra cada opção disponivel
                 cy.wrap($radio).check() //wrap vai pegar cada uma opção e fazer a ação
                 cy.wrap($radio).should('be.checked')
             })
